@@ -170,3 +170,64 @@ g + geom_bar(position = "dodge") +
   scale_fill_discrete("Student Involved in Activities")
 ```
 
+### Numeric Variables (across groups)
+
+The numeric variables are age, absences, and the three test grades variables (G1, G2, and G3) from each data set (math and Portuguese).
+
+- Find measures of center and spread for three of these variables (including at least one G3 variable)
+
+```{r}
+school_data |>
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
+            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+```
+
+    
+    – Repeat while subsetting the data in a meaningful way.
+
+Here we can subset to only include students who want to take higher education.
+
+```{r}
+school_data |>
+  filter(higher == "yes") |>
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
+            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+```
+
+- Find measures of center and spread across a single grouping variable for three of these variables (including a G3 variable as one of them)
+
+Here we will group according to `address`.
+
+```{r}
+school_data |>
+  group_by(address) |>
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
+            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+```
+
+- Find measures of center and spread across two grouping variables for three of these variables (including a G3 variable as one of them)
+
+Again we will group by `address`, and include `Pstatus` as an extra grouping variable.
+
+```{r}
+school_data |>
+  group_by(address, Pstatus) |>
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
+            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+```
+
+- Create a correlation matrix between all of the numeric variables
+
+```{r}
+numeric_var <- c("age", "absences.x", "absences.y", "G1.x", "G2.x", "G3.x", "G1.y", "G2.y", "G3.y")
+cor(school_data |> select(numeric_var))
+```
+
+- Create a histogram, kernel density plot, and boxplot for two of the numeric variables across one of the categorical variables (that is, create graphs that can compare the distributions across the groups on the same plot (no faceting here)). Add appropriate labels and titles.
+
+Here we can look at the `age` and `G3.x` (math) across the `address` variable.
+
+```{r}
+
+```
+
