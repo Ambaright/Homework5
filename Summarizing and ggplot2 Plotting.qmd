@@ -72,3 +72,101 @@ school_data <- school_data |>
          higher = as.factor(higher))
 ```
 
+## Task 2: Summarize the Data (Very Basic EDA)
+
+We’ve talked about the general process of conducting an EDA. You try to understand how your data is stored, what is missing, and you try to summarize the variables both numerically and visually to understand relationships within the data.
+
+Do the rest of these items on the **combined data**:
+
+- Look at how the data is stored and see if everything makes sense.
+
+```{r}
+print(school_data)
+```
+
+After investigating how our data is stored, everything makes sense and we can now investigate any missing values.
+
+- Document the missing values in the data.
+
+```{r}
+colSums(is.na(school_data))
+```
+
+We note that there are no missing values in the data.
+
+### Categorical Variables
+
+-  Create a one-way contingency table, a two-way contingency table, and a three-way contingency table for some of the factor variables you created previously. Use table() to accomplish this.
+    
+    – Interpret a number from each resulting table (that is, pick out a value produced and explain what that value means.)
+
+We first start with the one-way contingency table for `address`, to determine the counts for students who live in an Urban or Rural area. From the table below we see that 253 students out of the two Portuguese schools have an Urban home address.
+
+```{r}
+table(school_data$address)
+```
+
+Now we can look at a two-way contingency table for `address` and `higher`, to determine the counts for students interested in higher education across the two home address types Urban and Rural. From the table below we see that 64 out of the 67 Rural students want to take higher education.
+
+```{r}
+table(school_data$address, school_data$higher)
+```
+
+We can also take a look at a three-way contingency table for `address`, `higher`, and `Pstatus`. From the table below we see that of the students whose parents live together, 4 of the students living in an Urban home address do not have intentions of going for higher education.
+
+```{r}
+table(school_data$address, school_data$higher, school_data$Pstatus)
+```
+
+- Create a conditional two-way table using table(). That is, condition on one variable’s setting and create a two-way table. Do this using two different methods:
+
+    – Once, by subsetting the data (say with filter()) and then creating the two-way table
+    
+We can subset the data to only have students whose parents are living together.
+
+```{r}
+together_data <- school_data |>
+  filter(Pstatus == "Together")
+table(together_data$address, together_data$higher)
+```
+    
+    – Once, by creating a three-way table and subsetting it
+
+We can similarly create this same conditional two-way table using the three-way table and subsetting it.
+
+```{r}
+three_way_address_higher_Pstatus <- table(school_data$address, school_data$higher, school_data$Pstatus)
+three_way_address_higher_Pstatus[,,1]
+```
+
+- Create a two-way contingency table using group_by() and summarize() from dplyr. Then use pivot_wider() to make the result look more like the output from table().
+
+```{r}
+school_data |>
+  group_by(address, higher) |>
+  summarize(count = n()) |>
+  pivot_wider(names_from = higher, values_from = count)
+```
+
+- Create a stacked bar graph and a side-by-side bar graph. Give relevant x and y labels, and a title for the plots.
+
+For our stacked bar graph, we can look at `address` and `higher`.
+
+```{r}
+g <- ggplot(data = school_data, aes(x = address, fill = higher))
+g + geom_bar() +
+  labs(x = "Home Address", y = "Count of Students", 
+       title = "Stacked Bar Graph of Students Home Address and Higher Education Goals") +
+  scale_fill_discrete("Higher Education Goals")
+```
+
+We can now do a side-by-side bar plot for `Pstatus` and `activities`.
+
+```{r}
+g <- ggplot(data = school_data, aes(x = Pstatus, fill = activities))
+g + geom_bar(position = "dodge") +
+  labs(x = "Parental Living Status", y = "Count of Students",
+       title = "Side-by-side Bar Graph of Parental Living Status and Student Involved in Activities") +
+  scale_fill_discrete("Student Involved in Activities")
+```
+
