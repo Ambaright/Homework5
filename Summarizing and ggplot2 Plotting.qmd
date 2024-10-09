@@ -1,0 +1,74 @@
+---
+title: "Summarizing & ggplot2 Plotting"
+format: html
+editor: visual
+---
+
+We first need to load the necessary libraries.
+
+```{r, warning = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+```
+
+# Summarizing Student Data
+
+For this part, we’ll use data that comes from the UCI machine learning repository. The data is about secondary education in two Portuguese schools.
+
+## Task 1: Read in the Data and Modify
+
+- First, modify the code provided with the download to read in the data from a local file source (your downloaded .csv files) and combine the two data frames. Use local paths as they do in their code.
+
+```{r}
+d1=read.table("student-mat.csv",sep=";",header=TRUE)
+d2=read.table("student-por.csv",sep=";",header=TRUE)
+
+d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+print(nrow(d3)) # 382 students
+```
+
+- Second, read in and combine the data using functions from the tidyverse. Use an inner_join() on the variables they used in their code. Do you notice any issues? Make a note of the issue.
+
+```{r}
+mat_data <- read_delim("student-mat.csv", delim = ";", col_names = TRUE)
+por_data <- read_delim("student-por.csv", delim = ";", col_names = TRUE)
+school_data_error <- inner_join(mat_data, por_data,
+                  by = c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet")) |> collect()
+head(school_data_error)
+```
+
+We note that we have multiple variables that are listed as var_name.x and var_name.y, which implies that the same variable name occurs in both data sets (`mat_data` and `por_data`). However, since we did not join on those variables and they exist in both `mat_data` and `por_data` we will get the var_name.x and var_name.y
+
+
+- Use an inner_join() on all variables other than G1, G2, G3, paid, and absences. Use this form of the combined data in further exercises.
+
+```{r}
+school_data <- inner_join(mat_data, por_data, by = c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","guardian","traveltime","studytime","failures","schoolsup","famsup","activities","nursery","higher","internet","romantic","famrel","freetime","goout","Dalc","Walc","health")) |> collect()
+```
+
+
+- Next, for the math data, Portuguese, and combined data, choose four categorical variables you are interested in and convert those into factor variables in each tibble (use the same four variables in each). Use the mutate() function to accomplish this.
+
+For this exercise, the four categorical variables i'll be interested in are: `address` (student's home address type (binary: 'U' - urban or 'R' - rural)), `Pstatus` (parent's cohabitation status (binary: 'T' - living together or 'A' - apart)), `activities`(extra-curricular activities (binary: yes or no)), and `higher` (wants to take higher education (binary: yes or no)).
+
+```{r}
+mat_data <- mat_data |>
+  mutate(address = factor(address, levels = c("U", "R"), labels = c("Urban", "Rural")),
+         Pstatus = factor(Pstatus, levels = c("T", "A"), labels = c("Together", "Apart")),
+         activities = as.factor(activities),
+         higher = as.factor(higher))
+
+por_data <- por_data |>
+  mutate(address = factor(address, levels = c("U", "R"), labels = c("Urban", "Rural")),
+         Pstatus = factor(Pstatus, levels = c("T", "A"), labels = c("Together", "Apart")),
+         activities = as.factor(activities),
+         higher = as.factor(higher))
+
+school_data <- school_data |>
+  mutate(address = factor(address, levels = c("U", "R"), labels = c("Urban", "Rural")),
+         Pstatus = factor(Pstatus, levels = c("T", "A"), labels = c("Together", "Apart")),
+         activities = as.factor(activities),
+         higher = as.factor(higher))
+```
+
