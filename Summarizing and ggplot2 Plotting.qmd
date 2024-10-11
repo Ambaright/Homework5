@@ -176,10 +176,12 @@ The numeric variables are age, absences, and the three test grades variables (G1
 
 - Find measures of center and spread for three of these variables (including at least one G3 variable)
 
+Here are three numeric variables of interest are age, math G3 score, and Portuguese G3 score.
+
 ```{r}
 school_data |>
-  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
-            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_G3 = mean(G3.x),
+            sd_mat_G3 = sd(G3.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
 ```
 
     
@@ -190,30 +192,30 @@ Here we can subset to only include students who want to take higher education.
 ```{r}
 school_data |>
   filter(higher == "yes") |>
-  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
-            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_G3 = mean(G3.x),
+            sd_mat_G3 = sd(G3.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
 ```
 
 - Find measures of center and spread across a single grouping variable for three of these variables (including a G3 variable as one of them)
 
-Here we will group according to `address`.
+Here we will use the same three numeric variables (age, math G3 score and Portugues G3 score) group according to `address`.
 
 ```{r}
 school_data |>
   group_by(address) |>
-  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
-            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_G3 = mean(G3.x),
+            sd_mat_G3 = sd(G3.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
 ```
 
 - Find measures of center and spread across two grouping variables for three of these variables (including a G3 variable as one of them)
 
-Again we will group by `address`, and include `Pstatus` as an extra grouping variable.
+Again we will use the same three numeric variables and group by `address`, and include `Pstatus` as an extra grouping variable.
 
 ```{r}
 school_data |>
   group_by(address, Pstatus) |>
-  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_absences = mean(absences.x),
-            sd_mat_absences = sd(absences.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
+  summarize(mean_age = mean(age), sd_age = sd(age), mean_mat_G3 = mean(G3.x),
+            sd_mat_G3 = sd(G3.x), mean_por_G3 = mean(G3.y), sd_por_G3 = sd(G3.y))
 ```
 
 - Create a correlation matrix between all of the numeric variables
@@ -225,9 +227,71 @@ cor(school_data |> select(numeric_var))
 
 - Create a histogram, kernel density plot, and boxplot for two of the numeric variables across one of the categorical variables (that is, create graphs that can compare the distributions across the groups on the same plot (no faceting here)). Add appropriate labels and titles.
 
-Here we can look at the `age` and `G3.x` (math) across the `address` variable.
+Here we can look at the `age` and `G3.y` (Portuguese) across the `address` variable. That is we will create six different graphs.
+
+First we have a histogram for student age across home address.
 
 ```{r}
-
+#Histogram for age and address
+hist <- ggplot(data = school_data, aes(x = age, fill = address))
+hist + geom_bar(position = "dodge") +
+  labs(x = "Age of Students", y = "Count of Students", 
+       title = "Histogram of Age of Students Across Home Address") +
+  scale_fill_discrete("Home Address")
 ```
+
+Next we have a kernel density plot for student age across home address.
+
+```{r}
+#Kernel Density Plot for Age and Address
+kernel <- ggplot(data = school_data, aes(x = age))
+kernel + geom_density(alpha = 0.5, aes(fill = address)) +
+  labs(x = "Age of Students", y = "Frequency of Students",
+       title = "Kernel Density Plot for Age of Students Across Home Address") +
+  scale_fill_discrete("Home Address")
+```
+
+Next, we have a box plot for age of students across address.
+
+```{r}
+#Box Plot for Age and Address
+box <- ggplot(data = school_data, aes(x = address, y = age, fill = address))
+box + geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  labs(x = "Home Address", y = "Age of Students", 
+       title = "Box Plot for Age of Students Across Home Address") +
+  scale_fill_discrete("Home Address")
+```
+
+We can now examine the same plots but for the Portuguese final grade (`G3.y`) across home address.
+
+```{r}
+#Histogram for Portuguese final grade and address
+hist <- ggplot(data = school_data, aes(x = G3.y, fill = address))
+hist + geom_bar(position = "dodge") +
+  labs(x = "Portugues Final Grade", y = "Count of Final Grade Scores", 
+       title = "Histogram of Portuguese Final Grade Across Home Address") +
+  scale_fill_discrete("Home Address")
+```
+
+```{r}
+#Kernel Density Plot for Portugues Final Grade and Address
+kernel <- ggplot(data = school_data, aes(x = G3.y))
+kernel + geom_density(alpha = 0.5, aes(fill = address)) +
+  labs(x = "Portuguese Final Grade", y = "Frequency of Final Grade",
+       title = "Kernel Density Plot for Portugues Final Grade Across Home Address") +
+  scale_fill_discrete("Home Address")
+```
+
+```{r}
+#Box Plot for Portugues Final Grade and Address
+box <- ggplot(data = school_data, aes(x = address, y = G3.y, fill = address))
+box + geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  labs(x = "Home Address", y = "Portuguese Final Grade", 
+       title = "Box Plot for Portuguese Final Grade Across Home Address") +
+  scale_fill_discrete("Home Address")
+```
+
+
 
