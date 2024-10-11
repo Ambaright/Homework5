@@ -119,7 +119,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For this part, we’ll use data that comes from the UCI machine learning repository. The data is about secondary education in two Portuguese schools.</p>
 <section id="task-1-read-in-the-data-and-modify" class="level2">
 <h2 class="anchored" data-anchor-id="task-1-read-in-the-data-and-modify">Task 1: Read in the Data and Modify</h2>
-<p>=&gt; First, modify the code provided with the download to read in the data from a local file source (your downloaded .csv files) and combine the two data frames. Use local paths as they do in their code.</p>
+<ul>
+<li>First, modify the code provided with the download to read in the data from a local file source (your downloaded .csv files) and combine the two data frames. Use local paths as they do in their code.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d1<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-mat.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>d2<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"student-por.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">header=</span><span class="cn">TRUE</span>)</span>
@@ -130,7 +132,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] 382</code></pre>
 </div>
 </div>
-<p>=&gt; Second, read in and combine the data using functions from the tidyverse. Use an inner_join() on the variables they used in their code. Do you notice any issues? Make a note of the issue.</p>
+<ul>
+<li>Second, read in and combine the data using functions from the tidyverse. Use an inner_join() on the variables they used in their code. Do you notice any issues? Make a note of the issue.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mat_data <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"student-mat.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -187,6 +191,560 @@ dbl (16): age, Medu, Fedu, traveltime, studytime, failures, famrel, freetime...
 <ul>
 <li>Use an inner_join() on all variables other than G1, G2, G3, paid, and absences. Use this form of the combined data in further exercises.</li>
 </ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(mat_data, por_data, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"school"</span>,<span class="st">"sex"</span>,<span class="st">"age"</span>,<span class="st">"address"</span>,<span class="st">"famsize"</span>,<span class="st">"Pstatus"</span>,<span class="st">"Medu"</span>,<span class="st">"Fedu"</span>,<span class="st">"Mjob"</span>,<span class="st">"Fjob"</span>,<span class="st">"reason"</span>,<span class="st">"guardian"</span>,<span class="st">"traveltime"</span>,<span class="st">"studytime"</span>,<span class="st">"failures"</span>,<span class="st">"schoolsup"</span>,<span class="st">"famsup"</span>,<span class="st">"activities"</span>,<span class="st">"nursery"</span>,<span class="st">"higher"</span>,<span class="st">"internet"</span>,<span class="st">"romantic"</span>,<span class="st">"famrel"</span>,<span class="st">"freetime"</span>,<span class="st">"goout"</span>,<span class="st">"Dalc"</span>,<span class="st">"Walc"</span>,<span class="st">"health"</span>)) <span class="sc">|&gt;</span> <span class="fu">collect</span>()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(school_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 38
+  school sex     age address famsize Pstatus  Medu  Fedu Mjob     Fjob    reason
+  &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt; 
+1 GP     F        18 U       GT3     A           4     4 at_home  teacher course
+2 GP     F        17 U       GT3     T           1     1 at_home  other   course
+3 GP     F        15 U       GT3     T           4     2 health   servic… home  
+4 GP     F        16 U       GT3     T           3     3 other    other   home  
+5 GP     M        16 U       LE3     T           4     3 services other   reput…
+6 GP     M        16 U       LE3     T           2     2 other    other   home  
+# ℹ 27 more variables: guardian &lt;chr&gt;, traveltime &lt;dbl&gt;, studytime &lt;dbl&gt;,
+#   failures &lt;dbl&gt;, schoolsup &lt;chr&gt;, famsup &lt;chr&gt;, paid.x &lt;chr&gt;,
+#   activities &lt;chr&gt;, nursery &lt;chr&gt;, higher &lt;chr&gt;, internet &lt;chr&gt;,
+#   romantic &lt;chr&gt;, famrel &lt;dbl&gt;, freetime &lt;dbl&gt;, goout &lt;dbl&gt;, Dalc &lt;dbl&gt;,
+#   Walc &lt;dbl&gt;, health &lt;dbl&gt;, absences.x &lt;dbl&gt;, G1.x &lt;dbl&gt;, G2.x &lt;dbl&gt;,
+#   G3.x &lt;dbl&gt;, paid.y &lt;chr&gt;, absences.y &lt;dbl&gt;, G1.y &lt;dbl&gt;, G2.y &lt;dbl&gt;,
+#   G3.y &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li>Next, for the math data, Portuguese, and combined data, choose four categorical variables you are interested in and convert those into factor variables in each tibble (use the same four variables in each). Use the mutate() function to accomplish this.</li>
+</ul>
+<p>For this exercise, the four categorical variables i’ll be interested in are: <code>address</code> (student’s home address type (binary: ‘U’ - urban or ‘R’ - rural)), <code>Pstatus</code> (parent’s cohabitation status (binary: ‘T’ - living together or ‘A’ - apart)), <code>activities</code>(extra-curricular activities (binary: yes or no)), and <code>higher</code> (wants to take higher education (binary: yes or no)).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mat_data <span class="ot">&lt;-</span> mat_data <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">address =</span> <span class="fu">factor</span>(address, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"U"</span>, <span class="st">"R"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Urban"</span>, <span class="st">"Rural"</span>)),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Pstatus =</span> <span class="fu">factor</span>(Pstatus, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"T"</span>, <span class="st">"A"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Together"</span>, <span class="st">"Apart"</span>)),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">activities =</span> <span class="fu">as.factor</span>(activities),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">higher =</span> <span class="fu">as.factor</span>(higher))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>por_data <span class="ot">&lt;-</span> por_data <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">address =</span> <span class="fu">factor</span>(address, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"U"</span>, <span class="st">"R"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Urban"</span>, <span class="st">"Rural"</span>)),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">Pstatus =</span> <span class="fu">factor</span>(Pstatus, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"T"</span>, <span class="st">"A"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Together"</span>, <span class="st">"Apart"</span>)),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">activities =</span> <span class="fu">as.factor</span>(activities),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">higher =</span> <span class="fu">as.factor</span>(higher))</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>school_data <span class="ot">&lt;-</span> school_data <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">address =</span> <span class="fu">factor</span>(address, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"U"</span>, <span class="st">"R"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Urban"</span>, <span class="st">"Rural"</span>)),</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">Pstatus =</span> <span class="fu">factor</span>(Pstatus, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"T"</span>, <span class="st">"A"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Together"</span>, <span class="st">"Apart"</span>)),</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">activities =</span> <span class="fu">as.factor</span>(activities),</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">higher =</span> <span class="fu">as.factor</span>(higher))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="task-2-summarize-the-data-very-basic-eda" class="level2">
+<h2 class="anchored" data-anchor-id="task-2-summarize-the-data-very-basic-eda">Task 2: Summarize the Data (Very Basic EDA)</h2>
+<p>We’ve talked about the general process of conducting an EDA. You try to understand how your data is stored, what is missing, and you try to summarize the variables both numerically and visually to understand relationships within the data.</p>
+<p>Do the rest of these items on the <strong>combined data</strong>:</p>
+<ul>
+<li>Look at how the data is stored and see if everything makes sense.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(school_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 320 × 38
+   school sex     age address famsize Pstatus   Medu  Fedu Mjob     Fjob  reason
+   &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;   &lt;fct&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; 
+ 1 GP     F        18 Urban   GT3     Apart        4     4 at_home  teac… course
+ 2 GP     F        17 Urban   GT3     Together     1     1 at_home  other course
+ 3 GP     F        15 Urban   GT3     Together     4     2 health   serv… home  
+ 4 GP     F        16 Urban   GT3     Together     3     3 other    other home  
+ 5 GP     M        16 Urban   LE3     Together     4     3 services other reput…
+ 6 GP     M        16 Urban   LE3     Together     2     2 other    other home  
+ 7 GP     F        17 Urban   GT3     Apart        4     4 other    teac… home  
+ 8 GP     M        15 Urban   LE3     Apart        3     2 services other home  
+ 9 GP     M        15 Urban   GT3     Together     3     4 other    other home  
+10 GP     F        15 Urban   GT3     Together     4     4 teacher  heal… reput…
+# ℹ 310 more rows
+# ℹ 27 more variables: guardian &lt;chr&gt;, traveltime &lt;dbl&gt;, studytime &lt;dbl&gt;,
+#   failures &lt;dbl&gt;, schoolsup &lt;chr&gt;, famsup &lt;chr&gt;, paid.x &lt;chr&gt;,
+#   activities &lt;fct&gt;, nursery &lt;chr&gt;, higher &lt;fct&gt;, internet &lt;chr&gt;,
+#   romantic &lt;chr&gt;, famrel &lt;dbl&gt;, freetime &lt;dbl&gt;, goout &lt;dbl&gt;, Dalc &lt;dbl&gt;,
+#   Walc &lt;dbl&gt;, health &lt;dbl&gt;, absences.x &lt;dbl&gt;, G1.x &lt;dbl&gt;, G2.x &lt;dbl&gt;,
+#   G3.x &lt;dbl&gt;, paid.y &lt;chr&gt;, absences.y &lt;dbl&gt;, G1.y &lt;dbl&gt;, G2.y &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>After investigating how our data is stored, everything makes sense and we can now investigate any missing values.</p>
+<ul>
+<li>Document the missing values in the data.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(school_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    school        sex        age    address    famsize    Pstatus       Medu 
+         0          0          0          0          0          0          0 
+      Fedu       Mjob       Fjob     reason   guardian traveltime  studytime 
+         0          0          0          0          0          0          0 
+  failures  schoolsup     famsup     paid.x activities    nursery     higher 
+         0          0          0          0          0          0          0 
+  internet   romantic     famrel   freetime      goout       Dalc       Walc 
+         0          0          0          0          0          0          0 
+    health absences.x       G1.x       G2.x       G3.x     paid.y absences.y 
+         0          0          0          0          0          0          0 
+      G1.y       G2.y       G3.y 
+         0          0          0 </code></pre>
+</div>
+</div>
+<p>We note that there are no missing values in the data.</p>
+<section id="categorical-variables" class="level3">
+<h3 class="anchored" data-anchor-id="categorical-variables">Categorical Variables</h3>
+<ul>
+<li><p>Create a one-way contingency table, a two-way contingency table, and a three-way contingency table for some of the factor variables you created previously. Use table() to accomplish this.</p>
+<p>– Interpret a number from each resulting table (that is, pick out a value produced and explain what that value means.)</p></li>
+</ul>
+<p>We first start with the one-way contingency table for <code>address</code>, to determine the counts for students who live in an Urban or Rural area. From the table below we see that 253 students out of the two Portuguese schools have an Urban home address.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(school_data<span class="sc">$</span>address)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Urban Rural 
+  253    67 </code></pre>
+</div>
+</div>
+<p>Now we can look at a two-way contingency table for <code>address</code> and <code>higher</code>, to determine the counts for students interested in higher education across the two home address types Urban and Rural. From the table below we see that 64 out of the 67 Rural students want to take higher education.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(school_data<span class="sc">$</span>address, school_data<span class="sc">$</span>higher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+         no yes
+  Urban   4 249
+  Rural   3  64</code></pre>
+</div>
+</div>
+<p>We can also take a look at a three-way contingency table for <code>address</code>, <code>higher</code>, and <code>Pstatus</code>. From the table below we see that of the students whose parents live together, 4 of the students living in an Urban home address do not have intentions of going for higher education.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(school_data<span class="sc">$</span>address, school_data<span class="sc">$</span>higher, school_data<span class="sc">$</span>Pstatus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>, ,  = Together
+
+       
+         no yes
+  Urban   4 223
+  Rural   2  60
+
+, ,  = Apart
+
+       
+         no yes
+  Urban   0  26
+  Rural   1   4</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Create a conditional two-way table using table(). That is, condition on one variable’s setting and create a two-way table. Do this using two different methods:</p>
+<p>– Once, by subsetting the data (say with filter()) and then creating the two-way table</p></li>
+</ul>
+<p>We can subset the data to only have students whose parents are living together.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>together_data <span class="ot">&lt;-</span> school_data <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Pstatus <span class="sc">==</span> <span class="st">"Together"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(together_data<span class="sc">$</span>address, together_data<span class="sc">$</span>higher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+         no yes
+  Urban   4 223
+  Rural   2  60</code></pre>
+</div>
+</div>
+<pre><code>– Once, by creating a three-way table and subsetting it</code></pre>
+<p>We can similarly create this same conditional two-way table using the three-way table and subsetting it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>three_way_address_higher_Pstatus <span class="ot">&lt;-</span> <span class="fu">table</span>(school_data<span class="sc">$</span>address, school_data<span class="sc">$</span>higher, school_data<span class="sc">$</span>Pstatus)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>three_way_address_higher_Pstatus[,,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+         no yes
+  Urban   4 223
+  Rural   2  60</code></pre>
+</div>
+</div>
+<ul>
+<li>Create a two-way contingency table using group_by() and summarize() from dplyr. Then use pivot_wider() to make the result look more like the output from table().</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(address, higher) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> higher, <span class="at">values_from =</span> count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'address'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+# Groups:   address [2]
+  address    no   yes
+  &lt;fct&gt;   &lt;int&gt; &lt;int&gt;
+1 Urban       4   249
+2 Rural       3    64</code></pre>
+</div>
+</div>
+<ul>
+<li>Create a stacked bar graph and a side-by-side bar graph. Give relevant x and y labels, and a title for the plots.</li>
+</ul>
+<p>For our stacked bar graph, we can look at <code>address</code> and <code>higher</code>. From the stacked bar graph below, we notice that for both Urban and Rural students, there is a small count of students who do not have higher education goals. This is consistent with our contingency table findings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> address, <span class="at">fill =</span> higher))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Home Address"</span>, <span class="at">y =</span> <span class="st">"Count of Students"</span>, </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Stacked Bar Graph of Students Home Address and Higher Education Goals"</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Higher Education Goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can now do a side-by-side bar plot for <code>Pstatus</code> and <code>activities</code>. From the side-by-side bar plot below, we again see that for both Urban and Rural students, a low count of students are not involved in activities outside of school. Although, when comparing the Urban and Rural group, the Urban group may have more students who are not involved in activities compared to the rural group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> Pstatus, <span class="at">fill =</span> activities))</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Parental Living Status"</span>, <span class="at">y =</span> <span class="st">"Count of Students"</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Side-by-side Bar Graph of Parental Living Status and Student Involved in Activities"</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Student Involved in Activities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="numeric-variables-across-groups" class="level3">
+<h3 class="anchored" data-anchor-id="numeric-variables-across-groups">Numeric Variables (across groups)</h3>
+<p>The numeric variables are age, absences, and the three test grades variables (G1, G2, and G3) from each data set (math and Portuguese).</p>
+<ul>
+<li>Find measures of center and spread for three of these variables (including at least one G3 variable)</li>
+</ul>
+<p>Here the three numeric variables of interest are age, math G3 score, and Portuguese G3 score. From these summaries we see that on average, there is a higher Portuguese G3 score, or Final Grade, compared to the Math G3 score. Specifically there is on average a 1.84 point difference in the Final Grade between these two classes, with the Portuguese Final Grade having a smaller standard deviation compared to the Math Final Grade standard deviation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age), <span class="at">sd_age =</span> <span class="fu">sd</span>(age), <span class="at">mean_mat_G3 =</span> <span class="fu">mean</span>(G3.x),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_mat_G3 =</span> <span class="fu">sd</span>(G3.x), <span class="at">mean_por_G3 =</span> <span class="fu">mean</span>(G3.y), <span class="at">sd_por_G3 =</span> <span class="fu">sd</span>(G3.y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  mean_age sd_age mean_mat_G3 sd_mat_G3 mean_por_G3 sd_por_G3
+     &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1     16.5   1.14        11.0      4.30        12.9      2.89</code></pre>
+</div>
+</div>
+<pre><code>– Repeat while subsetting the data in a meaningful way.</code></pre>
+<p>Here we can subset to only include students who want to take higher education. We note that for students who want to take higher education, there is a similar trend in the difference in means between the Portuguese Final Grade and the Math Final Grade, with the Portuguese Final Grade having a slightly larger mean and smaller standard deviation compared to the Math Final Grade.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(higher <span class="sc">==</span> <span class="st">"yes"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age), <span class="at">sd_age =</span> <span class="fu">sd</span>(age), <span class="at">mean_mat_G3 =</span> <span class="fu">mean</span>(G3.x),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_mat_G3 =</span> <span class="fu">sd</span>(G3.x), <span class="at">mean_por_G3 =</span> <span class="fu">mean</span>(G3.y), <span class="at">sd_por_G3 =</span> <span class="fu">sd</span>(G3.y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  mean_age sd_age mean_mat_G3 sd_mat_G3 mean_por_G3 sd_por_G3
+     &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1     16.5   1.10        11.1      4.25        13.0      2.85</code></pre>
+</div>
+</div>
+<ul>
+<li>Find measures of center and spread across a single grouping variable for three of these variables (including a G3 variable as one of them)</li>
+</ul>
+<p>Here we will use the same three numeric variables (age, math G3 score and Portugues G3 score) group according to <code>address</code>. From this summarization, we see that for both Urban and Rural students we again see a higher mean Final Grade for Portuguese compared to Math. And when we compare the two groups, we see that Urban students have a higher final grade in these two courses compared to the Rural students.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(address) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age), <span class="at">sd_age =</span> <span class="fu">sd</span>(age), <span class="at">mean_mat_G3 =</span> <span class="fu">mean</span>(G3.x),</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_mat_G3 =</span> <span class="fu">sd</span>(G3.x), <span class="at">mean_por_G3 =</span> <span class="fu">mean</span>(G3.y), <span class="at">sd_por_G3 =</span> <span class="fu">sd</span>(G3.y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  address mean_age sd_age mean_mat_G3 sd_mat_G3 mean_por_G3 sd_por_G3
+  &lt;fct&gt;      &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1 Urban       16.4   1.12       11.3       4.18        13.2      2.46
+2 Rural       17.0   1.12        9.90      4.59        11.6      3.88</code></pre>
+</div>
+</div>
+<ul>
+<li>Find measures of center and spread across two grouping variables for three of these variables (including a G3 variable as one of them)</li>
+</ul>
+<p>Again we will use the same three numeric variables and group by <code>address</code>, and include <code>Pstatus</code> as an extra grouping variable. For this summarization, we see something interesting when we include a grouping of Parental Status. When comparing across Rural students, we see that those whose parents are living together have a lower math and portuguese final grade compared to Rural students whose parents live apart. However, for Urban students, we see a similar mean Final Grade for the Math and Portuguese classes across student’s whose parents live together and who live apart.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>school_data <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(address, Pstatus) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age), <span class="at">sd_age =</span> <span class="fu">sd</span>(age), <span class="at">mean_mat_G3 =</span> <span class="fu">mean</span>(G3.x),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_mat_G3 =</span> <span class="fu">sd</span>(G3.x), <span class="at">mean_por_G3 =</span> <span class="fu">mean</span>(G3.y), <span class="at">sd_por_G3 =</span> <span class="fu">sd</span>(G3.y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'address'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 8
+# Groups:   address [2]
+  address Pstatus  mean_age sd_age mean_mat_G3 sd_mat_G3 mean_por_G3 sd_por_G3
+  &lt;fct&gt;   &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1 Urban   Together     16.4  1.11        11.3       4.24        13.2      2.49
+2 Urban   Apart        16.2  1.20        11.8       3.70        13.5      2.20
+3 Rural   Together     16.9  1.14         9.68      4.63        11.5      3.95
+4 Rural   Apart        17.2  0.837       12.6       3.36        13.4      2.61</code></pre>
+</div>
+</div>
+<ul>
+<li>Create a correlation matrix between all of the numeric variables</li>
+</ul>
+<p>From our correlation matrix below, we note that the First Period (G1), Second Period (G2), and Final Grade (G3) for each class (x - math and y - Portuguese) have a strong positive linear relationship with the other grades for that class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>numeric_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"absences.x"</span>, <span class="st">"absences.y"</span>, <span class="st">"G1.x"</span>, <span class="st">"G2.x"</span>, <span class="st">"G3.x"</span>, <span class="st">"G1.y"</span>, <span class="st">"G2.y"</span>, <span class="st">"G3.y"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(school_data <span class="sc">|&gt;</span> <span class="fu">select</span>(numeric_var))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using an external vector in selections was deprecated in tidyselect 1.1.0.
+ℹ Please use `all_of()` or `any_of()` instead.
+  # Was:
+  data %&gt;% select(numeric_var)
+
+  # Now:
+  data %&gt;% select(all_of(numeric_var))
+
+See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    age  absences.x  absences.y        G1.x        G2.x
+age         1.000000000  0.14392517  0.04733182 -0.11037935 -0.18618740
+absences.x  0.143925170  1.00000000  0.56381559 -0.06946116 -0.07580245
+absences.y  0.047331821  0.56381559  1.00000000 -0.08760610 -0.12636236
+G1.x       -0.110379348 -0.06946116 -0.08760610  1.00000000  0.86588796
+G2.x       -0.186187399 -0.07580245 -0.12636236  0.86588796  1.00000000
+G3.x       -0.206031862 -0.02811847 -0.11664046  0.81859418  0.91357599
+G1.y       -0.050549678 -0.09247761 -0.09864117  0.59293522  0.54300736
+G2.y        0.029366456 -0.14516402 -0.12070727  0.59517224  0.56521350
+G3.y       -0.009103257 -0.13572638 -0.07145201  0.54388734  0.49603265
+                  G3.x        G1.y        G2.y         G3.y
+age        -0.20603186 -0.05054968  0.02936646 -0.009103257
+absences.x -0.02811847 -0.09247761 -0.14516402 -0.135726385
+absences.y -0.11664046 -0.09864117 -0.12070727 -0.071452010
+G1.x        0.81859418  0.59293522  0.59517224  0.543887345
+G2.x        0.91357599  0.54300736  0.56521350  0.496032649
+G3.x        1.00000000  0.52288461  0.54545279  0.475956497
+G1.y        0.52288461  1.00000000  0.88415041  0.825414320
+G2.y        0.54545279  0.88415041  1.00000000  0.894309821
+G3.y        0.47595650  0.82541432  0.89430982  1.000000000</code></pre>
+</div>
+</div>
+<ul>
+<li>Create a histogram, kernel density plot, and boxplot for two of the numeric variables across one of the categorical variables (that is, create graphs that can compare the distributions across the groups on the same plot (no faceting here)). Add appropriate labels and titles.</li>
+</ul>
+<p>Here we can look at the <code>age</code> and <code>G3.y</code> (Portuguese) across the <code>address</code> variable. That is we will create six different graphs.</p>
+<p>First we have a histogram for student age across home address. From this graph we see that the largest age group of students in urban areas is 16, whereas in rural areas it is 17. We also see that there is a possible outlier with one Urban student being 22.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Histogram for age and address</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">fill =</span> address))</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>hist <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age of Students"</span>, <span class="at">y =</span> <span class="st">"Count of Students"</span>, </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Histogram of Age of Students Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next we have a kernel density plot for student age across home address. With the kernel density plot below, we again see that there is a higher frequency of students aged 17 and 18 among those living in Rural areas. Whereas, for students living in urban areas, we see multiple peaks in the plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Kernel Density Plot for Age and Address</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>kernel <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> age))</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>kernel <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="fu">aes</span>(<span class="at">fill =</span> address)) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age of Students"</span>, <span class="at">y =</span> <span class="st">"Frequency of Students"</span>,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Kernel Density Plot for Age of Students Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, we have a box plot for age of students across address. In the box plot below we see that the Rural students have a larger variation of ages, and that the student who lives in an Urban area and is aged 22 is most likely an outlier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Box Plot for Age and Address</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>box <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> address, <span class="at">y =</span> age, <span class="at">fill =</span> address))</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>box <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Home Address"</span>, <span class="at">y =</span> <span class="st">"Age of Students"</span>, </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Box Plot for Age of Students Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can now examine the same plots but for the Portuguese final grade (<code>G3.y</code>) across home address. In the histogram below we see that most urban students scored in the 10/20 to 15/20 range for Portuguese final grade. We see a similar finding for rural students, but it’s important to note that more rural students received a final grade of 0/20 compared to the urban students.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Histogram for Portuguese final grade and address</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> G3.y, <span class="at">fill =</span> address))</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>hist <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portugues Final Grade"</span>, <span class="at">y =</span> <span class="st">"Count of Final Grade Scores"</span>, </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Histogram of Portuguese Final Grade Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the kernel density plot below, we see a similar trend as in the histogram. Specifically, we see that the urban students scored higher for the Portuguese Final Grade compared to the rural students.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Kernel Density Plot for Portugues Final Grade and Address</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>kernel <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> G3.y))</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>kernel <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="fu">aes</span>(<span class="at">fill =</span> address)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese Final Grade"</span>, <span class="at">y =</span> <span class="st">"Frequency of Final Grade"</span>,</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Kernel Density Plot for Portugues Final Grade Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Again, the box plot below confirms that the distribution of urban students scored higher on the Portuguese final grade compared to the rural students, due to the IQR for urban students falling in a higher grade range compared to the rural students.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Box Plot for Portugues Final Grade and Address</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>box <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> school_data, <span class="fu">aes</span>(<span class="at">x =</span> address, <span class="at">y =</span> G3.y, <span class="at">fill =</span> address))</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>box <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Home Address"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>, </span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Box Plot for Portuguese Final Grade Across Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Create two scatterplots relating a G3 variable to other numeric variables (put G3 on the y-axis). You should jitter the points if they sit on top of each other. Color the points by a categorical variable in each. Add appropriate labels and titles.</li>
+</ul>
+<p>Here we will relate the Portuguese Final Grade (<code>G3.y</code>) to the Portuguese First Period Grade (<code>G1.y</code>) across the Student’s Home Address. We see that for both Home Addresses, students typically improved in their Portuguese class when comparing the first period grade and the final grade. However, there are some outliers among the urban and rural students, as some rural students scored a zero on the final grade and some urban students scored a zero for the first period grade.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese First Period Grade and Final Grade</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> G1.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese First Period Grade"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Student's Portuguese First Period Grade vs. Final Grade"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can now relate absences in the Portuguese class (<code>absences.y</code>) with the Portuguese Final Grade (<code>G3.y</code>) across the Student’s Home Address. From the scatterplot below we notice that for the most part, less absences in the Portuguese class correlates to a higher final grade. However, there are a few urban students who are outliers and appear to be those students who can miss class and still do really well in the class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese Class Absences and Portuguese Final Grade</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> absences.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese Class Absences"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Repeat the scatter plot step but use faceting to obtain graphs at each setting of another categorical variable.</li>
+</ul>
+<p>Here we will facet by the Parental Status <code>Pstatus</code> variable. We first look at the relationship between Portuguese First Period Grade vs Final Grade. From the scatterplot below we notice that there isn’t too much of a difference in the trend between the Portuguese first period grade and the final grade across students whose parents live together versus those whose parents live apart. Which suggests that maybe parental status does not impact the improvement between the first period grades and final grades for the portuguese class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese First Period Grade and Final Grade with Facet of Pstatus</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> G1.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese First Period Grade"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Student's Portuguese First Period Grade vs. Final Grade"</span>, <span class="at">subtitle =</span> <span class="st">"Across Parental Status"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Pstatus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we can do a similar thing with the Portuguese Class Absences and Portuguese Final Grade. We again can see a similar trend in the class absences and final grade for the portuguese class when comparing student’s parental status. For both parental status’ we see those outlier urban students who can miss more classes and still perform relatively well on the final grade. However, it is interesting to note that for rural students whose parents live together, there are a few outliers who have zero absences and still scored a 0/20, which suggests that these students may have not taken the portuguese class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese Class Absences and Portuguese Final Grade across Parental Status</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> absences.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese Class Absences"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Pstatus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Repeat the scatter plot step but use faceting to obtain graphs at each combination of two categorical variables.</li>
+</ul>
+<p>In addition to faceting by Parental Status (<code>Pstatus</code>), we can also recreate our scatterplots by faceting by Higher Education Goals (<code>higher</code>).</p>
+<p>First we add the Higher Education Goals facet to our scatterplot of Portuguese First Period Grade vs.&nbsp;Final Grade. We note that there is a small number of students across parental status who did not have higher education goals. However, this graph does communicate to us that for those students who do not have higher education goals, across both parental status’ we see a similar mid-level relationship between the first period grade and final grade for the portuguese class. We also note that for those who do have higher education goals, we saw a positive trend across both parental status’ of improvement between the first period grade and final grade for the portuguese class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese First Period Grade and Final Grade with Faceting of Pstatus and Higher</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> G1.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese First Period Grade"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Student's Portuguese First Period Grade vs. Final Grade"</span>, <span class="at">subtitle =</span> <span class="st">"Across Higher Education Goals and Parental Status"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(higher <span class="sc">~</span> Pstatus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Similarly we can do it with our other scatterplot for Portuguese class absenses and final grades, and observe similar trends as we noted before in prior graphs. We see that across higher education goals and parental status’, students who missed less class typically scored a little better on the exam. But again, we see there are outlier urban students, mainly among those who have higher education goals, where students missed a ton of classes and still received a relatively decent final grade in the portuguese class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatterplot of Portuguese Class Absences and Portuguese Final Grade across Higher Education Goals and Parental Status</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(school_data, <span class="fu">aes</span>(<span class="at">x =</span> absences.y, <span class="at">y =</span> G3.y, <span class="at">color =</span> address))</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>scatter <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Portuguese Class Absences"</span>, <span class="at">y =</span> <span class="st">"Portuguese Final Grade"</span>,</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade"</span>, <span class="at">color =</span> <span class="st">"Home Address"</span>) <span class="sc">+</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(higher <span class="sc">~</span> Pstatus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Summarizing-and-ggplot2-Plotting_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 </section>
 

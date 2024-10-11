@@ -45,6 +45,7 @@ We note that we have multiple variables that are listed as var_name.x and var_na
 
 ```{r}
 school_data <- inner_join(mat_data, por_data, by = c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","guardian","traveltime","studytime","failures","schoolsup","famsup","activities","nursery","higher","internet","romantic","famrel","freetime","goout","Dalc","Walc","health")) |> collect()
+head(school_data)
 ```
 
 
@@ -150,7 +151,7 @@ school_data |>
 
 - Create a stacked bar graph and a side-by-side bar graph. Give relevant x and y labels, and a title for the plots.
 
-For our stacked bar graph, we can look at `address` and `higher`.
+For our stacked bar graph, we can look at `address` and `higher`. From the stacked bar graph below, we notice that for both Urban and Rural students, there is a small count of students who do not have higher education goals. This is consistent with our contingency table findings.
 
 ```{r}
 g <- ggplot(data = school_data, aes(x = address, fill = higher))
@@ -160,7 +161,7 @@ g + geom_bar() +
   scale_fill_discrete("Higher Education Goals")
 ```
 
-We can now do a side-by-side bar plot for `Pstatus` and `activities`.
+We can now do a side-by-side bar plot for `Pstatus` and `activities`. From the side-by-side bar plot below, we again see that for both Urban and Rural students, a low count of students are not involved in activities outside of school. Although, when comparing the Urban and Rural group, the Urban group may have more students who are not involved in activities compared to the rural group.
 
 ```{r}
 g <- ggplot(data = school_data, aes(x = Pstatus, fill = activities))
@@ -176,7 +177,7 @@ The numeric variables are age, absences, and the three test grades variables (G1
 
 - Find measures of center and spread for three of these variables (including at least one G3 variable)
 
-Here are three numeric variables of interest are age, math G3 score, and Portuguese G3 score.
+Here the three numeric variables of interest are age, math G3 score, and Portuguese G3 score. From these summaries we see that on average, there is a higher Portuguese G3 score, or Final Grade, compared to the Math G3 score. Specifically there is on average a 1.84 point difference in the Final Grade between these two classes, with the Portuguese Final Grade having a smaller standard deviation compared to the Math Final Grade standard deviation.
 
 ```{r}
 school_data |>
@@ -187,7 +188,7 @@ school_data |>
     
     – Repeat while subsetting the data in a meaningful way.
 
-Here we can subset to only include students who want to take higher education.
+Here we can subset to only include students who want to take higher education. We note that for students who want to take higher education, there is a similar trend in the difference in means between the Portuguese Final Grade and the Math Final Grade, with the Portuguese Final Grade having a slightly larger mean and smaller standard deviation compared to the Math Final Grade.
 
 ```{r}
 school_data |>
@@ -198,7 +199,7 @@ school_data |>
 
 - Find measures of center and spread across a single grouping variable for three of these variables (including a G3 variable as one of them)
 
-Here we will use the same three numeric variables (age, math G3 score and Portugues G3 score) group according to `address`.
+Here we will use the same three numeric variables (age, math G3 score and Portugues G3 score) group according to `address`. From this summarization, we see that for both Urban and Rural students we again see a higher mean Final Grade for Portuguese compared to Math. And when we compare the two groups, we see that Urban students have a higher final grade in these two courses compared to the Rural students.
 
 ```{r}
 school_data |>
@@ -209,7 +210,7 @@ school_data |>
 
 - Find measures of center and spread across two grouping variables for three of these variables (including a G3 variable as one of them)
 
-Again we will use the same three numeric variables and group by `address`, and include `Pstatus` as an extra grouping variable.
+Again we will use the same three numeric variables and group by `address`, and include `Pstatus` as an extra grouping variable. For this summarization, we see something interesting when we include a grouping of Parental Status. When comparing across Rural students, we see that those whose parents are living together have a lower math and portuguese final grade compared to Rural students whose parents live apart. However, for Urban students, we see a similar mean Final Grade for the Math and Portuguese classes across student's whose parents live together and who live apart.
 
 ```{r}
 school_data |>
@@ -220,6 +221,8 @@ school_data |>
 
 - Create a correlation matrix between all of the numeric variables
 
+From our correlation matrix below, we note that the First Period (G1), Second Period (G2), and Final Grade (G3) for each class (x - math and y - Portuguese) have a strong positive linear relationship with the other grades for that class.
+
 ```{r}
 numeric_var <- c("age", "absences.x", "absences.y", "G1.x", "G2.x", "G3.x", "G1.y", "G2.y", "G3.y")
 cor(school_data |> select(numeric_var))
@@ -229,7 +232,7 @@ cor(school_data |> select(numeric_var))
 
 Here we can look at the `age` and `G3.y` (Portuguese) across the `address` variable. That is we will create six different graphs.
 
-First we have a histogram for student age across home address.
+First we have a histogram for student age across home address. From this graph we see that the largest age group of students in urban areas is 16, whereas in rural areas it is 17. We also see that there is a possible outlier with one Urban student being 22.
 
 ```{r}
 #Histogram for age and address
@@ -240,7 +243,7 @@ hist + geom_bar(position = "dodge") +
   scale_fill_discrete("Home Address")
 ```
 
-Next we have a kernel density plot for student age across home address.
+Next we have a kernel density plot for student age across home address. With the kernel density plot below, we again see that there is a higher frequency of students aged 17 and 18 among those living in Rural areas. Whereas, for students living in urban areas, we see multiple peaks in the plot.
 
 ```{r}
 #Kernel Density Plot for Age and Address
@@ -251,7 +254,7 @@ kernel + geom_density(alpha = 0.5, aes(fill = address)) +
   scale_fill_discrete("Home Address")
 ```
 
-Next, we have a box plot for age of students across address.
+Next, we have a box plot for age of students across address. In the box plot below we see that the Rural students have a larger variation of ages, and that the student who lives in an Urban area and is aged 22 is most likely an outlier.
 
 ```{r}
 #Box Plot for Age and Address
@@ -263,7 +266,7 @@ box + geom_boxplot() +
   scale_fill_discrete("Home Address")
 ```
 
-We can now examine the same plots but for the Portuguese final grade (`G3.y`) across home address.
+We can now examine the same plots but for the Portuguese final grade (`G3.y`) across home address. In the histogram below we see that most urban students scored in the 10/20 to 15/20 range for Portuguese final grade. We see a similar finding for rural students, but it's important to note that more rural students received a final grade of 0/20 compared to the urban students.
 
 ```{r}
 #Histogram for Portuguese final grade and address
@@ -274,6 +277,8 @@ hist + geom_bar(position = "dodge") +
   scale_fill_discrete("Home Address")
 ```
 
+In the kernel density plot below, we see a similar trend as in the histogram. Specifically, we see that the urban students scored higher for the Portuguese Final Grade compared to the rural students.
+
 ```{r}
 #Kernel Density Plot for Portugues Final Grade and Address
 kernel <- ggplot(data = school_data, aes(x = G3.y))
@@ -282,6 +287,8 @@ kernel + geom_density(alpha = 0.5, aes(fill = address)) +
        title = "Kernel Density Plot for Portugues Final Grade Across Home Address") +
   scale_fill_discrete("Home Address")
 ```
+
+Again, the box plot below confirms that the distribution of urban students scored higher on the Portuguese final grade compared to the rural students, due to the IQR for urban students falling in a higher grade range compared to the rural students. 
 
 ```{r}
 #Box Plot for Portugues Final Grade and Address
@@ -293,5 +300,80 @@ box + geom_boxplot() +
   scale_fill_discrete("Home Address")
 ```
 
+- Create two scatterplots relating a G3 variable to other numeric variables (put G3 on the y-axis). You should jitter the points if they sit on top of each other. Color the points by a categorical variable in each. Add appropriate labels and titles.
 
+Here we will relate the Portuguese Final Grade (`G3.y`) to the Portuguese First Period Grade (`G1.y`) across the Student's Home Address. We see that for both Home Addresses, students typically improved in their Portuguese class when comparing the first period grade and the final grade. However, there are some outliers among the urban and rural students, as some rural students scored a zero on the final grade and some urban students scored a zero for the first period grade.
 
+```{r}
+#Scatterplot of Portuguese First Period Grade and Final Grade
+scatter <- ggplot(school_data, aes(x = G1.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese First Period Grade", y = "Portuguese Final Grade",
+       title = "Scatterplot of Student's Portuguese First Period Grade vs. Final Grade", color = "Home Address")
+```
+
+We can now relate absences in the Portuguese class (`absences.y`) with the Portuguese Final Grade (`G3.y`) across the Student's Home Address. From the scatterplot below we notice that for the most part, less absences in the Portuguese class correlates to a higher final grade. However, there are a few urban students who are outliers and appear to be those students who can miss class and still do really well in the class.
+
+```{r}
+#Scatterplot of Portuguese Class Absences and Portuguese Final Grade
+scatter <- ggplot(school_data, aes(x = absences.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese Class Absences", y = "Portuguese Final Grade",
+       title = "Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade", color = "Home Address")
+```
+
+- Repeat the scatter plot step but use faceting to obtain graphs at each setting of another categorical variable.
+
+Here we will facet by the Parental Status `Pstatus` variable. We first look at the relationship between Portuguese First Period Grade vs Final Grade. From the scatterplot below we notice that there isn't too much of a difference in the trend between the Portuguese first period grade and the final grade across students whose parents live together versus those whose parents live apart. Which suggests that maybe parental status does not impact the improvement between the first period grades and final grades for the portuguese class.
+
+```{r}
+#Scatterplot of Portuguese First Period Grade and Final Grade with Facet of Pstatus
+scatter <- ggplot(school_data, aes(x = G1.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese First Period Grade", y = "Portuguese Final Grade",
+       title = "Scatterplot of Student's Portuguese First Period Grade vs. Final Grade", subtitle = "Across Parental Status", color = "Home Address") +
+  facet_wrap(~ Pstatus)
+```
+
+Now we can do a similar thing with the Portuguese Class Absences and Portuguese Final Grade. We again can see a similar trend in the class absences and final grade for the portuguese class when comparing student's parental status. For both parental status' we see those outlier urban students who can miss more classes and still perform relatively well on the final grade. However, it is interesting to note that for rural students whose parents live together, there are a few outliers who have zero absences and still scored a 0/20, which suggests that these students may have not taken the portuguese class.
+
+```{r}
+#Scatterplot of Portuguese Class Absences and Portuguese Final Grade across Parental Status
+scatter <- ggplot(school_data, aes(x = absences.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese Class Absences", y = "Portuguese Final Grade",
+       title = "Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade", color = "Home Address") +
+  facet_wrap(~ Pstatus)
+```
+
+- Repeat the scatter plot step but use faceting to obtain graphs at each combination of two categorical variables.
+
+In addition to faceting by Parental Status (`Pstatus`), we can also recreate our scatterplots by faceting by Higher Education Goals (`higher`).
+
+First we add the Higher Education Goals facet to our scatterplot of Portuguese First Period Grade vs. Final Grade. We note that there is a small number of students across parental status who did not have higher education goals. However, this graph does communicate to us that for those students who do not have higher education goals, across both parental status' we see a similar mid-level relationship between the first period grade and final grade for the portuguese class. We also note that for those who do have higher education goals, we saw a positive trend across both parental status' of improvement between the first period grade and final grade for the portuguese class.
+
+```{r}
+#Scatterplot of Portuguese First Period Grade and Final Grade with Faceting of Pstatus and Higher
+scatter <- ggplot(school_data, aes(x = G1.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese First Period Grade", y = "Portuguese Final Grade",
+       title = "Scatterplot of Student's Portuguese First Period Grade vs. Final Grade", subtitle = "Across Higher Education Goals and Parental Status", color = "Home Address") +
+  facet_wrap(higher ~ Pstatus)
+```
+
+Similarly we can do it with our other scatterplot for Portuguese class absenses and final grades, and observe similar trends as we noted before in prior graphs. We see that across higher education goals and parental status', students who missed less class typically scored a little better on the exam. But again, we see there are outlier urban students, mainly among those who have higher education goals, where students missed a ton of classes and still received a relatively decent final grade in the portuguese class.
+
+```{r}
+#Scatterplot of Portuguese Class Absences and Portuguese Final Grade across Higher Education Goals and Parental Status
+scatter <- ggplot(school_data, aes(x = absences.y, y = G3.y, color = address))
+scatter + geom_point() +
+  geom_jitter(alpha = 0.3) +
+  labs(x = "Portuguese Class Absences", y = "Portuguese Final Grade",
+       title = "Scatterplot of Portuguese Class Absences vs. Portuguese Final Grade", color = "Home Address") +
+  facet_wrap(higher ~ Pstatus)
+```
